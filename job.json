@@ -1,0 +1,135 @@
+{
+  "Job": {
+    "ID": "example",
+    "Name": "example",
+    "Type": "service",
+    "Datacenters": ["dc1"],
+    "Priority": 50,
+    "TaskGroups": [
+      {
+        "Name": "cache",
+        "Count": 1,
+        "Migrate": {
+          "HealthCheck": "checks",
+          "HealthyDeadline": 120000000000,
+          "MaxParallel": 1,
+          "MinHealthyTime": 10000000000
+        },
+        "Tasks": [
+          {
+            "Name": "example-1",
+            "Driver": "docker",
+            "User": "",
+            "Artifacts": [
+              {"GetterSource":  "http://127.0.0.1:8888/example.tar"}
+            ],
+            "Config": {
+              "image": "example",
+              "load": "example.tar",
+              "port_map": [
+                {
+                  "server": 8080
+                }
+              ]
+            },
+            "Services": [
+              {
+                "Name": "python-server-1",
+                "Checks": [
+                  {
+                    "Name": "alive-1",
+                    "Interval": 10000000000,
+                    "Timeout": 2000000000,
+                    "Type": "http",
+                    "Protocol": "http",
+                    "PortLabel": "server",
+                    "Path": "/",
+                    "InitialStatus": "",
+                    "AddressMode": "host"
+                  }
+                ]
+              }
+            ],
+            "Resources": {
+              "Networks": [
+                {
+                  "Device": "",
+                  "CIDR": "",
+                  "IP": "",
+                  "MBits": 10,
+                  "DynamicPorts": [
+                    {
+                      "Label": "server",
+                      "Value": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Name": "example-2",
+            "Driver": "docker",
+            "User": "",
+            "Artifacts": [
+              {"GetterSource":  "http://127.0.0.1:8888/example.tar"}
+            ],
+            "Config": {
+              "image": "example",
+              "load": "example.tar",
+              "port_map": [
+                {
+                  "server": 8080
+                }
+              ]
+            },
+            "Services": [
+              {
+                "Name": "python-server-2",
+                "Checks": [
+                  {
+                    "Name": "alive-2",
+                    "Interval": 10000000000,
+                    "Timeout": 2000000000,
+                    "Type": "script",
+                    "Command": "/usr/local/bin/python",
+                    "Args": ["/app/scripts/healthcheck.py"],
+                    "InitialStatus": "",
+                    "AddressMode": "host"
+                  }
+                ]
+              }
+            ],
+            "Resources": {
+              "Networks": [
+                {
+                  "MBits": 10,
+                  "DynamicPorts": [
+                    {
+                      "Label": "server",
+                      "Value": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "RestartPolicy": {
+          "Interval": 1800000000000,
+          "Attempts": 2,
+          "Delay": 15000000000,
+          "Mode": "fail"
+        },
+        "ReschedulePolicy": {
+          "Attempts": 2,
+          "Delay": 30000000000,
+          "DelayFunction": "exponential",
+          "Interval": 120000000000,
+          "MaxDelay": 3600000000000,
+          "Unlimited": false
+        }
+      }
+    ]
+  }
+}
