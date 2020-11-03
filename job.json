@@ -92,8 +92,8 @@
                     "Interval": 10000000000,
                     "Timeout": 2000000000,
                     "Type": "script",
-                    "Command": "/usr/local/bin/python",
-                    "Args": ["/app/scripts/healthcheck.py"],
+                    "Command": "/bin/sh",
+                    "Args": ["-c", "/usr/local/bin/python /app/scripts/healthcheck.py 2>&1"],
                     "InitialStatus": "",
                     "AddressMode": "host"
                   }
